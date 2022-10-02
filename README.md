@@ -42,7 +42,7 @@ $ docker-compose up -d
 6) Test that the API works by visiting this URL: http://localhost:8087/api/hello/world
 7) Now you can start coding. The main and only files you ought to modify are `public/index.html` and `public/api/index.php`. 
 8) Do not forget to do commits periodically and frequently, so we can better understand your thought process.
-9) When you are done, please share with us the repository where we can review your solution.
+9) When you are done, please push your changes to a new repository and share it with us, so we can review your solution.
 
 Find the challenge requirements below.
 
