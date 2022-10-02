@@ -33,13 +33,13 @@ Once you have those installed. Please follow these steps:
 ```bash
 $ composer install
 ```
-3) Go back the root directory of this project and run docker-compose:
+3) Go back the root directory and run docker-compose:
 ```bash
 $ docker-compose up -d
 ```
 4) Wait until docker downloads and runs all the containers (might take a few minutes).
-5) Test that the web server works by visiting this URL: http://localhost:8087
-6) Test that the API works by visiting this URL: http://localhost:8087/api/hello/world
+5) Test that the web server works by visiting the URL: http://localhost:8087
+6) Test that the API works by visiting the URL: http://localhost:8087/api/hello/world
 7) Now you can start coding. The main and only files you ought to modify are `public/index.html` and `public/api/index.php`. 
 8) Do not forget to do commits periodically and frequently, so we can better understand your thought process.
 9) When you are done, please push your changes to a new repository and share it with us, so we can review your solution.
@@ -66,13 +66,13 @@ All the user-facing dates must be displayed in the Singaporean timezone.
 In order to make the post page looks good and to add the progress bar...
 
 You are free to reproduce any design of any blog article pages that you like
-(example: [Medium](https://medium.com/words-for-life/dear-people-who-hate-clapping-8497747199e6)).
+(for example: [Medium](https://medium.com/words-for-life/dear-people-who-hate-clapping-8497747199e6)).
 
 You are free to add any fonts, JS, CSS libraries or frameworks within `public/index.html`,
 but you are not allowed to use node/npm, neither any sort of transpiler nor bundler.
 You are not allowed to "upload" any static resources to the server.
 
-The html structure of the post content itself (paragraphs, titles...) should remain the same.
+The html structure of the post content itself (paragraphs, titles...) must not be modified.
 
 
 #### Backend exercise constraints:
@@ -90,13 +90,13 @@ how to use both these services in `public/api/index.php`.
 
 #### A few clues...
 
-Your users are expected to visit the URL:
+Your users are expected to access the post page by visiting the URL:
 http://localhost:8087
 
 They are expected to start reading, to close the browser and return to keep reading later.
 
-In order to call the API using javascript, you may use the base URL:
-http://localhost:8087/api/your-endpoint
+In order to call the API from the UI, you may use the base URL:
+http://localhost:8087/api/
 
 A quick example using vanilla javascript (notice that this code exposes our app
 to a XSS attack, so it might not be the best way to do it):
@@ -126,5 +126,5 @@ For example, in order to include React in `index.html` you could use:
 ```
 
 Notice that, because you are not allowed to use bundlers or transpilers,
-you might be limited in terms of which features of the framework you may use.
+you might be limited in terms of which features of the framework you can use.
 For example, in the case of React you won't be able to use JSX.
