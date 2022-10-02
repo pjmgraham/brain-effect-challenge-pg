@@ -56,12 +56,17 @@ The CEO wants you to do 3 things:
 - When the user is done reading, show to the user:
   - The time when the user started reading the post.
   - The time when the user finished reading the post.
-  - The amount of time in hours, minutes and seconds that took the user to finish reading the post. All the user-facing dates must be displayed in the Singaporean timezone.
+  - The amount of time in hours, minutes and seconds that took the user to finish reading the post.
+
+All the user-facing dates must be displayed in the Singaporean timezone.
 
 
 #### Frontend exercise constraints:
 
 In order to make the post page looks good and to add the progress bar...
+
+You are free to reproduce any design of any blog article pages that you like
+(example: [Medium](https://medium.com/words-for-life/dear-people-who-hate-clapping-8497747199e6)).
 
 You are free to add any fonts, JS, CSS libraries or frameworks within `public/index.html`,
 but you are not allowed to use node/npm, neither any sort of transpiler nor bundler.
