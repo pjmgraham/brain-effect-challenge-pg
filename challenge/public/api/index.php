@@ -24,8 +24,8 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
  * Here you can write your own API endpoints.
  * You can use Redis and/or cookies for data persistence.
  *
- * Find below an example of a GET endpoint that saves the name received
- * and returns that name in any subsequent calls that occur during the next 10 seconds:
+ * Find below an example of a GET endpoint that uses redis to temporarily store a name,
+ * and cookies to keep track of an event date and time.
  */
 
 $app->get('/hello/{name}', function (Request $request, Response $response, $args) {
@@ -42,6 +42,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
     }
 
     // Setting a cookie example:
+    $cookieValue = '';
     if (empty($_COOKIE["FirstSalutationTime"])) {
         $cookieName = "FirstSalutationTime";
         $cookieValue = time();
@@ -53,7 +54,8 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
     $response->getBody()->write(json_encode([
         'name' => $name,
         'salutation' => "Hello, $name!",
-    ]));
+        'first_salutation_time' => $_COOKIE["FirstSalutationTime"] ?? (string)$cookieValue,
+    ], JSON_THROW_ON_ERROR));
 
     return $response->withHeader('Content-Type', 'application/json');
 });
