@@ -3,7 +3,7 @@
 
 ### Introduction
 
-The purpose of this challenge is to evaluate your general coding skills,
+The purpose of this challenge is to evaluate your coding skills,
 your understanding of fullstack solutions,
 and your ability to learn and adapt to unfamiliar tech stacks.
 
@@ -26,7 +26,8 @@ You will need installed in your computer:
 - docker and docker-compose
 - composer
 
-Steps:
+Once you have those installed. Please follow these steps:
+
 1) Using git, clone this repository in your computer.
 2) Go to the `challenge` subdirectory and run composer:
 ```bash
@@ -40,8 +41,8 @@ $ docker-compose up -d
 5) Test that the web server works by visiting this URL: http://localhost:8087
 6) Test that the API works by visiting this URL: http://localhost:8087/api/hello/world
 7) Now you can start coding. The main and only files you ought to modify are `public/index.html` and `public/api/index.php`. 
-8) Do not forget to do commits periodically and frequently.
-9) When you are done, please share with us the URL of the repository where we can review your solution.
+8) Do not forget to do commits periodically and frequently, so we can better understand your thought process.
+9) When you are done, please share with us the repository where we can review your solution.
 
 Find the challenge requirements below.
 
@@ -55,16 +56,14 @@ The CEO wants you to do 3 things:
 - When the user is done reading, show to the user:
   - The time when the user started reading the post.
   - The time when the user finished reading the post.
-  - The amount of time in hours, minutes and seconds that took the user to finish reading the post.
-
-He wants all the user-facing dates to be displayed in the Singaporean timezone.
+  - The amount of time in hours, minutes and seconds that took the user to finish reading the post. All the user-facing dates must be displayed in the Singaporean timezone.
 
 
 #### Frontend exercise constraints:
 
 In order to make the post page looks good and to add the progress bar...
 
-You are free to add any JS or CSS library or framework that you prefer to `public/index.html`,
+You are free to add any fonts, JS, CSS libraries or frameworks within `public/index.html`,
 but you are not allowed to use node/npm, neither any sort of transpiler nor bundler.
 You are not allowed to "upload" any static resources to the server.
 
@@ -76,12 +75,12 @@ The html structure of the post content itself (paragraphs, titles...) should rem
 In order to keep track of the user reading time...
 
 You are free to add any amount of code and endpoints to the API in `public/api/index.php`,
-and to send requests to them, however you prefer, from `public/index.html`,
+and to send any amount of requests from `public/index.html`,
 but you are not allowed to add additional composer packages nor to call any external services.
 
 Notice that the solution should work even if the user decides to close their browser and continue reading later,
 in order to accomplish that you will probably need to use redis or cookies or both. You have an example of 
-how to use these services in `public/api/index.php`.
+how to use both these services in `public/api/index.php`.
 
 
 #### A few clues...
@@ -89,8 +88,10 @@ how to use these services in `public/api/index.php`.
 Your users are expected to visit the URL:
 http://localhost:8087
 
+They are expected to start reading, to close the browser and return to keep reading later.
+
 In order to call the API using javascript, you may use the base URL:
-http://localhost:8087/api/
+http://localhost:8087/api/your-endpoint
 
 A quick example using vanilla javascript (notice that this code exposes our app
 to a XSS attack, so it might not be the best way to do it):
@@ -112,7 +113,7 @@ to a XSS attack, so it might not be the best way to do it):
 ```
 
 If you want to add a JS library or framework to your UI, you could import it using a CDN or similar.
-For example, in order to reference React in `index.html` you could use:
+For example, in order to include React in `index.html` you could use:
 
 ```html
 <script src="https://unpkg.com/react@15/dist/react.js"></script>
@@ -121,4 +122,4 @@ For example, in order to reference React in `index.html` you could use:
 
 Notice that, because you are not allowed to use bundlers or transpilers,
 you might be limited in terms of which features of the framework you may use.
-In the case of React, for example, you won't be able to write JSX code.
+For example, in the case of React you won't be able to use JSX.
