@@ -45,7 +45,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
     $cookieValue = '';
     if (empty($_COOKIE["FirstSalutationTime"])) {
         $cookieName = "FirstSalutationTime";
-        $cookieValue = time();
+        $cookieValue = (string)time();
         $expires = time() + 60 * 60 * 24 * 30; // 30 days.
         setcookie($cookieName, $cookieValue, $expires, '/');
     }
@@ -54,7 +54,7 @@ $app->get('/hello/{name}', function (Request $request, Response $response, $args
     $response->getBody()->write(json_encode([
         'name' => $name,
         'salutation' => "Hello, $name!",
-        'first_salutation_time' => $_COOKIE["FirstSalutationTime"] ?? (string)$cookieValue,
+        'first_salutation_time' => $_COOKIE["FirstSalutationTime"] ?? $cookieValue,
     ], JSON_THROW_ON_ERROR));
 
     return $response->withHeader('Content-Type', 'application/json');
