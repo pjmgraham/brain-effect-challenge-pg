@@ -50,11 +50,17 @@ $app->get('/stopReading', function (Request $request, Response $response) {
     date_default_timezone_set('Asia/Singapore');
     $startTime = $redis->get('startTime');
     if (!$startTime) {
-        return $response->withStatus(400)->getBody()->write('The challenge has not started yet');
+        $response->getBody()->write('The challenge has not started yet');
+        return $response;
     } else {
       $endTime = date('Y-m-d H:i:s');
       $redis->set('endTime', $endTime);
-      $response->getBody()->write('The challenge has ended at ' . $endTime);
+      $totalTime = (strtotime($endTime) - strtotime($startTime));
+      $hours = floor($totalTime / 3600);
+      $minutes = floor(($totalTime / 60) % 60);
+      $seconds = $totalTime % 60;
+      $response->getBody()->write('You began reading at ' . $startTime . ' and finished at at ' . $endTime . '. Your total time spent was ' . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds.");
+      $redis->del("startTime");
       return $response;
     }
 });
