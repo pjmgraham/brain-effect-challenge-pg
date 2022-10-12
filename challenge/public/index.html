@@ -1,5 +1,39 @@
-<html lang="en" style="scroll-behavior: smooth">
+<html lang="en" style="scroll-behavior: smooth; height: 100%">
   <head>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- call to api/startReading on page loading -->
+    <script>
+      $(document).ready(function () {
+        $.ajax({
+          url: "http://localhost:8087/api/startReading",
+          type: "GET",
+          success: function (data) {
+            console.log(data);
+          },
+        });
+      });
+    </script>
+    <!-- script for reading progress bar functionality -->
+    <script>
+      $(window).on("scroll", function () {
+        var s = $(window).scrollTop(),
+          d = $(document.getElementById("text-column")).height(),
+          c = $(window).height();
+
+        var scrollPercent = ((s / (d - c)) * 100).toFixed(0);
+
+        console.log(scrollPercent);
+
+        $("#progressbarStart")
+          .css("width", scrollPercent + "%")
+          .attr("aria-valuenow", scrollPercent);
+        $("#progressbarEnd")
+          .css("width", 100 - scrollPercent + "%")
+          .attr("aria-valuenow", 100 - scrollPercent);
+      });
+    </script>
+
     <!-- Bootswatch theme united -->
     <link
       rel="stylesheet"
@@ -9,7 +43,7 @@
     />
     <title>Braineffect - Challenge</title>
   </head>
-  <body>
+  <body style="height: 300%">
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"
@@ -21,16 +55,14 @@
       <div
         class="progress-bar progress-bar-striped progress-bar-animated bg-dark"
         role="progressbar"
-        style="width: 25%"
-        aria-valuenow="25"
+        id="progressbarStart"
         aria-valuemin="0"
         aria-valuemax="100"
       ></div>
       <div
         class="progress-bar bg-primary"
         role="progressbar"
-        style="width: 75%"
-        aria-valuenow="75"
+        id="progressbarEnd"
         aria-valuemin="0"
         aria-valuemax="100"
       ></div>
@@ -51,7 +83,7 @@
             top: 0;
           "
         ></div>
-        <div class="col py-3">
+        <div class="col py-3" id="text-column">
           <div class="card mb-3">
             <div class="card-header">
               <h1>HTML Ipsum Presents</h1>
