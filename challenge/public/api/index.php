@@ -28,6 +28,39 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
  * and cookies to keep track of an event date and time.
  */
 
+$app->get('/startReading', function (Request $request, Response $response) {
+
+    $redis = $this->get('redisClient');
+    date_default_timezone_set('Asia/Singapore');
+    $oldStartTime = $redis->get('startTime');
+    if ($oldStartTime) {
+        $response->getBody()->write('The challenge has already started at ' . $oldStartTime);
+        return $response;
+    } else {
+      $startTime = date('Y-m-d H:i:s');
+      $redis->set('startTime', $startTime);
+      $response->getBody()->write('The challenge has started at ' . $startTime);
+      return $response;
+    }
+});
+
+$app->get('/stopReading', function (Request $request, Response $response) {
+
+    $redis = $this->get('redisClient');
+    date_default_timezone_set('Asia/Singapore');
+    $startTime = $redis->get('startTime');
+    if (!$startTime) {
+        return $response->withStatus(400)->getBody()->write('The challenge has not started yet');
+    } else {
+      $endTime = date('Y-m-d H:i:s');
+      $redis->set('endTime', $endTime);
+      $response->getBody()->write('The challenge has ended at ' . $endTime);
+      return $response;
+    }
+});
+
+
+
 $app->get('/hello/{name}', function (Request $request, Response $response, $args) {
 
     // Redis usage example:
