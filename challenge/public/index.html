@@ -20,9 +20,8 @@
     ></script>
 
     <script>
-      var exports = {};
       // <!-- call to api/startReading on page loading -->
-      $(window).ready(function () {
+      $(function () {
         $.ajax({
           url: "http://localhost:8087/api/startReading",
           type: "GET",
@@ -32,7 +31,9 @@
         });
       });
 
-      // call to api/stopReading on and scroller
+      // scrollbar functionality along with nested api call on 100% scroll
+      // and conditional rendering of alert message
+      // also conditional setting of page refresh behaviour as a bug fix
 
       $(window).on("scroll", function scroller() {
         (s = $(window).scrollTop()),
@@ -65,7 +66,7 @@
                   `<div
                   class="alert alert-success alert-dismissible fade show mx-5"
                   role="alert"
-                  style="position: absolute; top: 30vh"
+                  style="position: absolute"
                   >
                   <strong>Congratulations!</strong>
                   </br>
@@ -103,10 +104,14 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary pt-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"
-          >The Singapore Blog &#127480;&#127468;
-        </a>
-      </div>
-    </nav>
+        >The Singapore Blog &#127480;&#127468;
+      </a>
+    </div>
+  </nav>
+  <div
+    id="alert"
+    style="z-index: 1000; position: sticky; top: 25vh; max-width: 500"
+  ></div>
     <div class="container-fluid text-center p-0">
       <div class="progress bg-primary sticky-top" style="border-radius: 0px">
         <div
@@ -119,27 +124,38 @@
       </div>
       <div class="row">
         <div
-          class="col"
+          class="col-sm d-none d-md-block"
           style="
             position: sticky;
             background-image: url('https://images.unsplash.com/photo-1628221680019-f28a2716e727?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3165&q=80');
             opacity: 0.5;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            overflow: hidden;
             height: 100vh;
             width: auto;
             top: 0;
           "
-        >
-          <div id="alert" style="position: relative"></div>
-        </div>
+        ></div>
 
-        <div class="col py-3" id="text-column">
+        <div class="col-sm" id="text-column">
           <div class="card mb-3">
             <div class="card-header">
               <h1>HTML Ipsum Presents</h1>
             </div>
+            <image
+              src="https://images.unsplash.com/photo-1555947970-15e7a8a0bb73?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2231&q=80"
+              width="100%"
+              height="auto"
+              style="
+                font-size: 1.125rem;
+                text-anchor: middle;
+                border: black;
+                border-width: 1px;
+                border-style: solid;
+              "
+            >
+            </image>
             <div class="card-body">
               <p>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
@@ -506,20 +522,20 @@
             </div>
           </div>
           <!-- included just for ui purposes -->
-          <div class="d-flex flex-row justify-content-between">
+          <div class="d-flex flex-row justify-content-between px-3 pb-3">
             <a href="#">Previous</a>
             <a href="#">Next</a>
           </div>
         </div>
         <div
-          class="col"
+          class="col-sm d-none d-md-block"
           style="
             position: sticky;
             background-image: url('https://images.unsplash.com/photo-1555217851-6141535bd771?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3087&q=80');
             opacity: 0.5;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
+            overflow: hidden;
             height: 100vh;
             width: auto;
             top: 0;
