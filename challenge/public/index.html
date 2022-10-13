@@ -22,7 +22,7 @@
     <script>
       var exports = {};
       // <!-- call to api/startReading on page loading -->
-      $(document).ready(function () {
+      $(window).ready(function () {
         $.ajax({
           url: "http://localhost:8087/api/startReading",
           type: "GET",
@@ -45,7 +45,15 @@
           .css("width", scrollPercent + "%")
           .attr("aria-valuenow", scrollPercent);
 
-        if (scroller.fired) return;
+        if (scroller.fired) {
+          history.scrollRestoration = "manual";
+          window.onbeforeunload = function () {
+            window.scrollTo(0, 0);
+          };
+          return;
+        } else {
+          history.scrollRestoration = "auto";
+        }
 
         if (scrollPercent == 100) {
           $.ajax({
@@ -58,19 +66,19 @@
                   class="alert alert-success alert-dismissible fade show mx-5"
                   role="alert"
                   style="position: absolute; top: 30vh"
-                >
+                  >
                   <strong>Congratulations!</strong>
                   </br>
                   ${data}
                   <button
-                    type="button"
-                    class="close"
-                    data-dismiss="alert"
-                    aria-label="Close"
+                  type="button"
+                  class="close"
+                  data-dismiss="alert"
+                  aria-label="Close"
                   >
-                    <span aria-hidden="true">&times;</span>
+                  <span aria-hidden="true">&times;</span>
                   </button>
-                </div>`
+                  </div>`
                 );
               }
               alertSuccess(data);
