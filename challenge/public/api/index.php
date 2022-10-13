@@ -59,7 +59,7 @@ $app->get('/stopReading', function (Request $request, Response $response) {
       $hours = floor($totalTime / 3600);
       $minutes = floor(($totalTime / 60) % 60);
       $seconds = $totalTime % 60;
-      $response->getBody()->write('You began reading at ' . $startTime . ' and finished at at ' . $endTime . '. Your total time spent was ' . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds.");
+      $response->getBody()->write('You began reading at ' . $startTime . ' and finished at at ' . $endTime . '. Your total reading time was ' . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds.");
       $redis->del("startTime");
       return $response;
     }
