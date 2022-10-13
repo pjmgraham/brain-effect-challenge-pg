@@ -2,6 +2,11 @@
   <head>
     <!-- jQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- util.js -->
+    <script
+      type="text/javascript"
+      src="https://cdnjs.cloudflare.com/ajax/libs/anchorme/2.0.0/node/utils.js"
+    ></script>
     <!-- call to api/startReading on page loading -->
     <script>
       $(document).ready(function () {
@@ -13,24 +18,32 @@
           },
         });
       });
-    </script>
-    <!-- script for reading progress bar functionality -->
-    <script>
-      $(window).on("scroll", function () {
-        var s = $(window).scrollTop(),
-          d = $(document.getElementById("text-column")).height(),
-          c = $(window).height();
 
-        var scrollPercent = ((s / (d - c)) * 100).toFixed(0);
+      // call to api/stopReading on and scroller
 
-        console.log(scrollPercent);
+      $(window).on("scroll", function scroller() {
+        (s = $(window).scrollTop()),
+          (d = $(document.getElementById("text-column")).height()),
+          (c = $(window).height());
+
+        scrollPercent = ((s / (d - c)) * 100).toFixed(0);
 
         $("#progressbarStart")
           .css("width", scrollPercent + "%")
           .attr("aria-valuenow", scrollPercent);
-        $("#progressbarEnd")
-          .css("width", 100 - scrollPercent + "%")
-          .attr("aria-valuenow", 100 - scrollPercent);
+
+        if (scroller.fired) return;
+
+        if (scrollPercent == 100) {
+          $.ajax({
+            url: "http://localhost:8087/api/stopReading",
+            type: "GET",
+            success: function (data) {
+              console.log(data);
+            },
+          });
+          scroller.fired = true;
+        }
       });
     </script>
 
@@ -43,31 +56,25 @@
     />
     <title>Braineffect - Challenge</title>
   </head>
-  <body style="height: 300%">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary pt-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"
           >The Singapore Blog &#127480;&#127468;
         </a>
       </div>
     </nav>
-    <div class="progress sticky-top">
-      <div
-        class="progress-bar progress-bar-striped progress-bar-animated bg-dark"
-        role="progressbar"
-        id="progressbarStart"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
-      <div
-        class="progress-bar bg-primary"
-        role="progressbar"
-        id="progressbarEnd"
-        aria-valuemin="0"
-        aria-valuemax="100"
-      ></div>
-    </div>
     <div class="container-fluid text-center p-0">
+      <div class="progress bg-primary sticky-top" style="border-radius: 0px">
+        <div
+          class="progress-bar progress-bar-striped progress-bar-animated bg-dark"
+          role="progressbar"
+          id="progressbarStart"
+          aria-valuemin="0"
+          aria-valuemax="10"
+        ></div>
+      </div>
       <div class="row">
         <div
           class="col"
@@ -82,7 +89,36 @@
             width: auto;
             top: 0;
           "
-        ></div>
+        >
+          <div
+            id="alert"
+            style="
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              z-index: 9999;
+            "
+          >
+            <div
+              class="alert alert-success alert-dismissible fade show"
+              role="alert"
+              style="position: absolute; top: 30vh"
+            >
+              <strong>Congratulations!</strong> You should check in on some of
+              those fields below.
+              <button
+                type="button"
+                class="close"
+                data-dismiss="alert"
+                aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="col py-3" id="text-column">
           <div class="card mb-3">
             <div class="card-header">
@@ -475,7 +511,7 @@
         />
       </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-4">
       <div class="container-fluid justify-content-center">
         <a class="navbar-brand" href="#">Return to top</a>
       </div>
