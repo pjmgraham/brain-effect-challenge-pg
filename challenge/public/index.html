@@ -483,89 +483,88 @@
 </html>
 
 <script>
-    // <!-- call to api/startReading on page loading -->
-    $(function () {
+  // <!-- call to api/startReading on page loading -->
+  $(function () {
+    $.ajax({
+      url: "http://localhost:8087/api/startReading",
+      type: "GET",
+      success: function (data) {
+        console.log(data);
+      },
+    });
+  });
+
+  // scrollbar functionality along with nested api call on 100% scroll
+  // and conditional rendering of alert message
+  // also conditional setting of page refresh behaviour as a bug fix
+
+  $(window).on("scroll", function scroller() {
+    (s = $(window).scrollTop()),
+      (d = $(document.getElementById("text-column")).height()),
+      (c = $(window).height());
+
+    const scrollPercent = ((s / (d - c)) * 100).toFixed(0);
+
+    $("#progressbarStart")
+      .css("width", scrollPercent + "%")
+      .attr("aria-valuenow", scrollPercent);
+
+    if (scroller.fired) {
+      history.scrollRestoration = "manual";
+      window.onbeforeunload = function () {
+        window.scrollTo(0, 0);
+      };
+      return;
+    } else {
+      history.scrollRestoration = "auto";
+    }
+
+    if (scrollPercent == 100) {
       $.ajax({
-        url: "http://localhost:8087/api/startReading",
+        url: "http://localhost:8087/api/stopReading",
         type: "GET",
         success: function (data) {
-          console.log(data);
+          function alertSuccess(message) {
+            $("#alert").append(
+              `<div
+                      class="alert alert-success alert-dismissible fade show mx-5"
+                      role="alert"
+                      style="position: absolute"
+                      >
+                      <strong>Congratulations!</strong>
+                      </br>
+                      ${data}
+                      <button
+                      type="button"
+                      class="close"
+                      data-dismiss="alert"
+                      aria-label="Close"
+                      >
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                      </div>`
+            );
+          }
+          alertSuccess(data);
         },
       });
-    });
+      scroller.fired = true;
+    }
+  });
 
-    // scrollbar functionality along with nested api call on 100% scroll
-    // and conditional rendering of alert message
-    // also conditional setting of page refresh behaviour as a bug fix
+  // display date and time on page (bonus + to make navbar look less empty)
 
-    $(window).on("scroll", function scroller() {
-      (s = $(window).scrollTop()),
-        (d = $(document.getElementById("text-column")).height()),
-        (c = $(window).height());
-
-      const scrollPercent = ((s / (d - c)) * 100).toFixed(0);
-
-      $("#progressbarStart")
-        .css("width", scrollPercent + "%")
-        .attr("aria-valuenow", scrollPercent);
-
-      if (scroller.fired) {
-        history.scrollRestoration = "manual";
-        window.onbeforeunload = function () {
-          window.scrollTo(0, 0);
-        };
-        return;
-      } else {
-        history.scrollRestoration = "auto";
-      }
-
-      if (scrollPercent == 100) {
-        $.ajax({
-          url: "http://localhost:8087/api/stopReading",
-          type: "GET",
-          success: function (data) {
-            function alertSuccess(message) {
-              $("#alert").append(
-                `<div
-                        class="alert alert-success alert-dismissible fade show mx-5"
-                        role="alert"
-                        style="position: absolute"
-                        >
-                        <strong>Congratulations!</strong>
-                        </br>
-                        ${data}
-                        <button
-                        type="button"
-                        class="close"
-                        data-dismiss="alert"
-                        aria-label="Close"
-                        >
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                        </div>`
-              );
-            }
-            alertSuccess(data);
-          },
-        });
-        scroller.fired = true;
-      }
-    });
-
-    // display date and time on page (bonus + to make navbar look less empty)
-
-
-    setInterval(function () {
-      $("#clock").html(
-        new Date().toLocaleDateString("en-US", {
+  $(function timeAndDate() {
+    $("#clock").html(
+      new Date().toLocaleDateString("en-US", {
+        timeZone: "Asia/Singapore",
+      }) +
+        " " +
+        new Date().toLocaleTimeString("en-US", {
           timeZone: "Asia/Singapore",
         }) +
-          " " +
-          new Date().toLocaleTimeString("en-US", {
-            timeZone: "Asia/Singapore",
-          }) +
-          " SGT"
-      );
-    }, 1)
-
+        " SGT"
+    );
+    setInterval(timeAndDate, 1000);
+  });
 </script>
