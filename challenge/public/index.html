@@ -19,77 +19,6 @@
       src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha.2/js/umd/util.js"
     ></script>
 
-    <script>
-      // <!-- call to api/startReading on page loading -->
-      $(function () {
-        $.ajax({
-          url: "http://localhost:8087/api/startReading",
-          type: "GET",
-          success: function (data) {
-            console.log(data);
-          },
-        });
-      });
-
-      // scrollbar functionality along with nested api call on 100% scroll
-      // and conditional rendering of alert message
-      // also conditional setting of page refresh behaviour as a bug fix
-
-      $(window).on("scroll", function scroller() {
-        (s = $(window).scrollTop()),
-          (d = $(document.getElementById("text-column")).height()),
-          (c = $(window).height());
-
-        scrollPercent = ((s / (d - c)) * 100).toFixed(0);
-
-        $("#progressbarStart")
-          .css("width", scrollPercent + "%")
-          .attr("aria-valuenow", scrollPercent);
-
-        if (scroller.fired) {
-          history.scrollRestoration = "manual";
-          window.onbeforeunload = function () {
-            window.scrollTo(0, 0);
-          };
-          return;
-        } else {
-          history.scrollRestoration = "auto";
-        }
-
-        if (scrollPercent == 100) {
-          $.ajax({
-            url: "http://localhost:8087/api/stopReading",
-            type: "GET",
-            success: function (data) {
-              function alertSuccess(message) {
-                $("#alert").append(
-                  `<div
-                  class="alert alert-success alert-dismissible fade show mx-5"
-                  role="alert"
-                  style="position: absolute"
-                  >
-                  <strong>Congratulations!</strong>
-                  </br>
-                  ${data}
-                  <button
-                  type="button"
-                  class="close"
-                  data-dismiss="alert"
-                  aria-label="Close"
-                  >
-                  <span aria-hidden="true">&times;</span>
-                  </button>
-                  </div>`
-                );
-              }
-              alertSuccess(data);
-            },
-          });
-          scroller.fired = true;
-        }
-      });
-    </script>
-
     <!-- Bootswatch theme united -->
     <link
       rel="stylesheet"
@@ -104,14 +33,16 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary pt-4">
       <div class="container-fluid">
         <a class="navbar-brand" href="#"
-        >The Singapore Blog &#127480;&#127468;
-      </a>
-    </div>
-  </nav>
-  <div
-    id="alert"
-    style="z-index: 1000; position: sticky; top: 25vh; max-width: 500"
-  ></div>
+          >The Singapore Blog &#127480;&#127468;
+        </a>
+
+        <a id="clock" class="navbar-brand"></a>
+      </div>
+    </nav>
+    <div
+      id="alert"
+      style="z-index: 1000; position: sticky; top: 25vh; max-width: 500"
+    ></div>
     <div class="container-fluid text-center p-0">
       <div class="progress bg-primary sticky-top" style="border-radius: 0px">
         <div
@@ -119,7 +50,7 @@
           role="progressbar"
           id="progressbarStart"
           aria-valuemin="0"
-          aria-valuemax="10"
+          aria-valuemax="100"
         ></div>
       </div>
       <div class="row">
@@ -139,7 +70,7 @@
         ></div>
 
         <div class="col-sm" id="text-column">
-          <div class="card mb-3">
+          <div class="card my-3">
             <div class="card-header">
               <h1>HTML Ipsum Presents</h1>
             </div>
@@ -550,3 +481,91 @@
     </nav>
   </body>
 </html>
+
+<script>
+    // <!-- call to api/startReading on page loading -->
+    $(function () {
+      $.ajax({
+        url: "http://localhost:8087/api/startReading",
+        type: "GET",
+        success: function (data) {
+          console.log(data);
+        },
+      });
+    });
+
+    // scrollbar functionality along with nested api call on 100% scroll
+    // and conditional rendering of alert message
+    // also conditional setting of page refresh behaviour as a bug fix
+
+    $(window).on("scroll", function scroller() {
+      (s = $(window).scrollTop()),
+        (d = $(document.getElementById("text-column")).height()),
+        (c = $(window).height());
+
+      const scrollPercent = ((s / (d - c)) * 100).toFixed(0);
+
+      $("#progressbarStart")
+        .css("width", scrollPercent + "%")
+        .attr("aria-valuenow", scrollPercent);
+
+      if (scroller.fired) {
+        history.scrollRestoration = "manual";
+        window.onbeforeunload = function () {
+          window.scrollTo(0, 0);
+        };
+        return;
+      } else {
+        history.scrollRestoration = "auto";
+      }
+
+      if (scrollPercent == 100) {
+        $.ajax({
+          url: "http://localhost:8087/api/stopReading",
+          type: "GET",
+          success: function (data) {
+            function alertSuccess(message) {
+              $("#alert").append(
+                `<div
+                        class="alert alert-success alert-dismissible fade show mx-5"
+                        role="alert"
+                        style="position: absolute"
+                        >
+                        <strong>Congratulations!</strong>
+                        </br>
+                        ${data}
+                        <button
+                        type="button"
+                        class="close"
+                        data-dismiss="alert"
+                        aria-label="Close"
+                        >
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>`
+              );
+            }
+            alertSuccess(data);
+          },
+        });
+        scroller.fired = true;
+      }
+    });
+
+    // display date and time on page (bonus + to make navbar look less empty)
+
+
+    setInterval(function () {
+      $("#clock").html(
+        new Date().toLocaleDateString("en-US", {
+          timeZone: "Asia/Singapore",
+        }) +
+          " " +
+          new Date().toLocaleTimeString("en-US", {
+            timeZone: "Asia/Singapore",
+          }) +
+          " SGT"
+      );
+    }, 1)
+
+</script>
