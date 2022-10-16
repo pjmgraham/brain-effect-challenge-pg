@@ -30,39 +30,57 @@ $errorMiddleware = $app->addErrorMiddleware(true, true, true);
 
 $app->get('/startReading', function (Request $request, Response $response) {
 
-    $redis = $this->get('redisClient');
-    date_default_timezone_set('Asia/Singapore');
-    $oldStartTime = $redis->get('startTime');
-    if ($oldStartTime) {
-        $response->getBody()->write('The challenge has already started at ' . $oldStartTime);
-        return $response;
-    } else {
-      $startTime = date('Y-m-d H:i:s');
-      $redis->set('startTime', $startTime);
-      $response->getBody()->write('The challenge has started at ' . $startTime);
-      return $response;
-    }
+  /** @var \Predis\Client $redisClient */
+  $redis = $this->get('redisClient');
+  date_default_timezone_set('Asia/Singapore');
+
+  $oldStartTime = $redis->get('startTime');
+  $startTime = $oldStartTime ?? date('Y-m-d H:i:s');
+  $redis->set('startTime', $startTime);
+
+  $response->getBody()->write(json_encode([
+      'status' => 'started',
+      'startTime' => $startTime,
+  ], JSON_THROW_ON_ERROR));
+
+  return $response->withHeader('Content-Type', 'application/json');
 });
 
 $app->get('/stopReading', function (Request $request, Response $response) {
 
-    $redis = $this->get('redisClient');
-    date_default_timezone_set('Asia/Singapore');
-    $startTime = $redis->get('startTime');
-    if (!$startTime) {
-        $response->getBody()->write('The challenge has not started yet');
-        return $response;
-    } else {
-      $endTime = date('Y-m-d H:i:s');
-      $redis->set('endTime', $endTime);
-      $totalTime = (strtotime($endTime) - strtotime($startTime));
-      $hours = floor($totalTime / 3600);
-      $minutes = floor(($totalTime / 60) % 60);
-      $seconds = $totalTime % 60;
-      $response->getBody()->write('You began reading at ' . $startTime . ' and finished at at ' . $endTime . '. Your total reading time was ' . $hours . " hours, " . $minutes . " minutes, " . $seconds . " seconds.");
-      $redis->del("startTime");
-      return $response;
-    }
+  /** @var \Predis\Client $redisClient */
+  $redis = $this->get('redisClient');
+  date_default_timezone_set('Asia/Singapore');
+  $startTime = $redis->get('startTime');
+
+  if (null === $startTime) {
+      $response->getBody()->write(json_encode([
+          'status' => 'not_started',
+      ], JSON_THROW_ON_ERROR));
+
+      return $response->withHeader('Content-Type', 'application/json');
+  };
+
+  $endTime = date('Y-m-d H:i:s');
+  $redis->set('endTime', $endTime);
+
+  $totalTime = (strtotime($endTime) - strtotime($startTime));
+  $hours = floor($totalTime / 3600);
+  $minutes = floor(($totalTime / 60) % 60);
+  $seconds = $totalTime % 60;
+
+  $response->getBody()->write(json_encode([
+      'status' => 'done',
+      'startTime' => $startTime,
+      'endTime' => $endTime,
+      'hours' => $hours,
+      'minutes' => $minutes,
+      'seconds' => $seconds,
+  ], JSON_THROW_ON_ERROR));
+
+  $redis->del("startTime");
+
+  return $response->withHeader('Content-Type', 'application/json');
 });
 
 
